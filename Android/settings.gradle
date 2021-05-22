@@ -1,0 +1,3 @@
+rootProject.name = "Routek"
+include ':app'
+include ':openCVLibrary3410'
