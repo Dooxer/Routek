@@ -1,11 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
 import Map from './components/Map';
+import Scraper from './components/Scraper';
 
 function App() {
   return (
     <div className="App">
-      <Map></Map>
+      <Scraper></Scraper>
     </div>
   );
 }

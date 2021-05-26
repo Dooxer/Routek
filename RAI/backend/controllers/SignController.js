@@ -10,7 +10,7 @@ module.exports = {
     /**
      * SignController.list()
      */
-    list: function (req, res) {
+    list: function (req, res) {nm
         SignModel.find(function (err, Signs) {
             if (err) {
                 return res.status(500).json({
