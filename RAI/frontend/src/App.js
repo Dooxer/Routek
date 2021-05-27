@@ -4,7 +4,7 @@ import Scraper from './components/Scraper';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" id="scraper">
       <Scraper></Scraper>
     </div>
   );

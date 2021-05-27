@@ -11,7 +11,7 @@ module.exports = {
      * TrafficEventController.list()
      */
     list: function (req, res) {
-        TrafficeventModel.find(function (err, TrafficEvents) {
+        TrafficeventModel.find().sort("-updated").exec(function (err, TrafficEvents) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting TrafficEvent.',
