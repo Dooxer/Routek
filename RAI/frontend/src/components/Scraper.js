@@ -11,6 +11,7 @@ function Scraper(props) {
 
     useEffect(function () {
         const url = 'https://www.promet.si/dc/b2b.dogodki.rss?language=en_US&eventtype=incidents';
+        document.getElementById("loader").style.display = "block";
 
         rp(url).then(function(html){
             async function update(){
@@ -105,6 +106,8 @@ function Scraper(props) {
                                 }                       
                             });
                             update();
+                            
+                            document.getElementById("loader").style.display = "none";
                         }
                     }    
                 }
@@ -118,7 +121,7 @@ function Scraper(props) {
 
     function formatDate (date) {
         date = new Date(date);
-        var ret = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " " + (date.getHours() + 1) + ":" + (date.getMinutes() >= 10 ? date.getMinutes() : "0" + date.getMinutes());
+        var ret = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " " + date.getHours() + ":" + (date.getMinutes() >= 10 ? date.getMinutes() : "0" + date.getMinutes());
         return ret;
     }
 
@@ -127,7 +130,7 @@ function Scraper(props) {
     }
     
     return (
-        <>
+        <div>
             <h1>{trafficEventsHead.subtitle}</h1>
             <h3>{trafficEventsHead.title}</h3>
             <h5>Author: {trafficEventsHead.author}</h5>
@@ -156,7 +159,7 @@ function Scraper(props) {
                     })}
                 </tbody>
             </Table>  
-        </>
+        </div>
     );
 }
 
