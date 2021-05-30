@@ -3,6 +3,8 @@ import {BrowserRouter, Route} from 'react-router-dom';
 import Map from './components/Map';
 import Scraper from './components/Scraper';
 import Header from './components/Header';
+import Signs from './components/Signs';
+import Roads from './components/Roads';
 
 function App() {
   return (
@@ -14,6 +16,12 @@ function App() {
             </Route>
             <Route path='/scraper' exact>
                 <Scraper />
+            </Route>
+            <Route path='/signs' exact>
+                <Signs />
+            </Route>
+            <Route path='/roads' exact>
+                <Roads />
             </Route>
         </div>
     </BrowserRouter>

@@ -5,9 +5,10 @@ function Header(props){
     return(
         <header>
             <Navbar bg="dark" variant="dark">
-                <Navbar.Brand href="/">Domov</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link href="/scraper">Traffic events</Nav.Link>
+                    <Nav.Link href="/signs">Signs</Nav.Link>
+                    <Nav.Link href="/roads">Roads</Nav.Link>
                 </Nav>             
             </Navbar>
             <div className="loader" id="loader"></div>
