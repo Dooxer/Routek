@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 
-function Signs(props) {
+function Signs() {
     const [signs, setSigns] = useState([]);
     const sloCoordinates = [46.1491664, 14.9860106];
 
@@ -29,7 +29,7 @@ function Signs(props) {
                     const icon = new L.Icon({
                         iconUrl: "http://localhost:3001/" + sign.picture,
                         iconRetinaUrl: "http://localhost:3001/" + sign.picture,
-                        iconSize: new L.Point(40, 40),
+                        iconSize: new L.Point(45, 45),
                         className: 'leaflet-div-icon'
                     });
 

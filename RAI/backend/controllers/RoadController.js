@@ -52,10 +52,11 @@ module.exports = {
      */
     create: function (req, res) {
         var Road = new RoadModel({
-			startLocation : req.body.startLocation,
-			endLocation : req.body.endLocation,
+            pathID: req.body.pathID,
+			latitude : req.body.latitude,
+			longtitude : req.body.longtitude,
 			quality : req.body.quality,
-			length : req.body.length
+            date : Date()
         });
 
         Road.save(function (err, Road) {
@@ -90,11 +91,10 @@ module.exports = {
                 });
             }
 
-            Road.startLocation = req.body.startLocation ? req.body.startLocation : Road.startLocation;
-			Road.endLocation = req.body.endLocation ? req.body.endLocation : Road.endLocation;
+            Road.latitude = req.body.startLatitude ? req.body.startLatitude : Road.startLatitude;
+			Road.longtitude = req.body.startLongtitude ? req.body.startLongtitude : Road.startLongtitude;
 			Road.quality = req.body.quality ? req.body.quality : Road.quality;
-			Road.length = req.body.length ? req.body.length : Road.length;
-			
+
             Road.save(function (err, Road) {
                 if (err) {
                     return res.status(500).json({

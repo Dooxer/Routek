@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 const rp = require('request-promise');
 var convert = require('xml-js');
 
-function Scraper(props) {
+function Scraper() {
     const [trafficEvents, setTrafficEvents] = useState([]);
     const [trafficEventsHead, setTrafficEventsHead] = useState([]);
     const [update, setUpdate] = useState(0);
@@ -128,7 +128,7 @@ function Scraper(props) {
     function updateEvents(){
         setUpdate(update + 1);
     }
-    
+
     return (
         <div>
             <h1>{trafficEventsHead.subtitle}</h1>
@@ -149,7 +149,8 @@ function Scraper(props) {
                 </thead>
                 <tbody>
                     {trafficEvents.map((element) => {
-                        return (<tr key={element.id}>
+                        return (
+                        <tr key={element.id}>
                             <td>{element.id}</td>
                             <td>{element.title}</td>
                             <td>{element.summary}</td>
