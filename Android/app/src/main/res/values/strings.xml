@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Routek</string>
     <string name="routek">Routek</string>
-    <string name="prepoznavanje_znaka">Prepoznavanje Znaka</string>
+    <string name="open_camera">Slikanje znaka</string>
     <string name="merjenje_kvalitete_ceste">Merjenje kvalitete ceste</string>
 </resources>
