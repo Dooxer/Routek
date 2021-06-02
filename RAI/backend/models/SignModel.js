@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var SignSchema = new Schema({
 	'picture': String,
 	'description': String,
-	'location': String,
+	'longtitude' : Number,
+	'latitude' : Number,
 	'date': Date
 });
 

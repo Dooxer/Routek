@@ -54,7 +54,8 @@ module.exports = {
         var Sign = new SignModel({
 			picture : req.body.picture,
 			description : req.body.description,
-			location : req.body.location,
+            longtitude : req.body.longtitude,
+            latitude : req.body.latitude,
 			date : Date()
         });
 
@@ -92,7 +93,6 @@ module.exports = {
 
             Sign.picture = req.body.picture ? req.body.picture : Sign.picture;
 			Sign.description = req.body.description ? req.body.description : Sign.description;
-			Sign.location = req.body.location ? req.body.location : Sign.location;
 			
             Sign.save(function (err, Sign) {
                 if (err) {

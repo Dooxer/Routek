@@ -55,9 +55,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var roadRouter = require('./routes/RoadRoutes');
 var signRouter = require('./routes/SignRoutes');
+var trafficEventRouter = require('./routes/TrafficEventRoutes');
+var trafficEventsHeadRouter = require('./routes/TrafficEventsHeadRoutes');
 
 app.use('/roads', roadRouter);
 app.use('/signs', signRouter);
+app.use('/trafficEvent', trafficEventRouter);
+app.use('/trafficEventsHead', trafficEventsHeadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
