@@ -4,9 +4,19 @@ import android.app.Application;
 import android.graphics.Bitmap;
 import android.location.Location;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.util.Base64;
+
 public class ApplicationMy extends Application {
-    Bitmap image;
-    Location location;
+    public String image;
+    public Double longitude;
+    public Double latitude;
 
     @Override
     public void onCreate() {
@@ -14,18 +24,28 @@ public class ApplicationMy extends Application {
     }
 
     public Bitmap getImage() {
-        return image;
+        ImageConverter imageConverter = new ImageConverter();
+        return imageConverter.convert(this.image);
     }
 
-    public Location getLocation() {
-        return location;
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     public void setImage(Bitmap image) {
-        this.image = image;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+        ImageConverter imageConverter = new ImageConverter();
+        this.image = imageConverter.convert(image);
     }
 }

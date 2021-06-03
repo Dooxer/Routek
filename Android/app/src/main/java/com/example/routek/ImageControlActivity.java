@@ -2,23 +2,33 @@ package com.example.routek;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class ImageControlActivity extends AppCompatActivity {
     private static final String TAG = ImageControlActivity.class.getSimpleName();
@@ -27,11 +37,19 @@ public class ImageControlActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationCallback locationCallback;
     boolean trackingLocation = false;
+    ImageView imageView;
+    RequestQueue requestQueue;
+    String signsURL = "http://192.168.137.44:3001/signs";
+    JsonObjectRequest objectRequest;
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    SignsJSON signsJSON = new SignsJSON();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_control);
+
+        imageView = (ImageView) findViewById(R.id.imageView);
 
         applicationMy = (ApplicationMy) getApplication();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -39,13 +57,26 @@ public class ImageControlActivity extends AppCompatActivity {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if(trackingLocation){
+                if (trackingLocation) {
+                    applicationMy.setLatitude(locationResult.getLastLocation().getLatitude());
+                    applicationMy.setLongitude(locationResult.getLastLocation().getLongitude());
+                    setJSONobject();
                     Log.d(TAG, "LOCATION: " + locationResult.getLastLocation().getLongitude() + ", " + locationResult.getLastLocation().getLatitude());
                 }
             }
         };
 
+        loadImage();
         getLocation();
+
+        requestQueue = Volley.newRequestQueue(this);
+        objectRequest = null;
+    }
+
+    private void loadImage() {
+        if (applicationMy.getImage() == null) return;
+
+        imageView.setImageBitmap(applicationMy.getImage());
     }
 
     @Override
@@ -53,8 +84,6 @@ public class ImageControlActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSION:
-                // If the permission is granted, get the location,
-                // otherwise, show a Toast
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLocation();
@@ -83,15 +112,6 @@ public class ImageControlActivity extends AppCompatActivity {
             fusedLocationProviderClient.requestLocationUpdates
                     (getLocationRequest(), locationCallback,
                             null /* Looper */);
-//                    getLastLocation().addOnSuccessListener(
-//                new OnSuccessListener<Location>() {
-//                    @Override
-//                    public void onSuccess(Location location) {
-//                        if (location != null) {
-//                            Log.i(TAG, "Location: " + location.getLatitude() + ", " + location.getLongitude());
-//                        }
-//                    }
-//                });
         }
     }
 
@@ -101,5 +121,43 @@ public class ImageControlActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
+    }
+
+    public void onPostButtonClick(View view) {
+        try {
+            objectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    signsURL,
+                    getJSON(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response){
+                            Log.d("Rest response: {}", response.toString());
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error){
+                            Log.d("Rest error response: {}", error.toString());
+                        }
+                    }
+            );
+        } catch (ParseException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        requestQueue.add(objectRequest);
+    }
+
+    public JSONObject getJSON() throws ParseException, JSONException {
+        String jsonString = gson.toJson(signsJSON);
+        return new JSONObject(jsonString);
+    }
+
+    private void setJSONobject(){
+        signsJSON.picture = "fajn slika";
+        signsJSON.description = "tule se je treba ustavt.";
+        signsJSON.latitude = applicationMy.latitude;
+        signsJSON.longtitude = applicationMy.longitude;
     }
 }
