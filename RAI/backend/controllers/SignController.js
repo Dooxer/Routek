@@ -1,10 +1,11 @@
 var SignModel = require('../models/SignModel.js');
-
+var fs = require("fs")
 /**
  * SignController.js
  *
  * @description :: Server-side logic for managing Signs.
  */
+
 module.exports = {
 
     /**
@@ -51,8 +52,15 @@ module.exports = {
      * SignController.create()
      */
     create: function (req, res) {
+        var date = new Date();
+        var fileName = "images/" + (date.toJSON().slice(0,10) + "_" + date.getHours() + "-" + date.getMinutes() + "-" + date.getMilliseconds()) + ".png";
+        console.log(fileName)
+        fs.writeFile("public/" + fileName, req.body.file, 'base64', function(err) {
+            console.log(err);
+        });
+        
         var Sign = new SignModel({
-			picture : req.body.picture,
+			picture : fileName,
 			description : req.body.description,
             longtitude : req.body.longtitude,
             latitude : req.body.latitude,

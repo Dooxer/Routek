@@ -2,6 +2,8 @@ package com.example.routek;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import java.io.File;
 
 public class ImageControlActivity extends AppCompatActivity {
     private static final String TAG = ImageControlActivity.class.getSimpleName();
@@ -155,8 +159,9 @@ public class ImageControlActivity extends AppCompatActivity {
     }
 
     private void setJSONobject(){
-        signsJSON.picture = "fajn slika";
-        signsJSON.description = "tule se je treba ustavt.";
+        ImageConverter imageConverter = new ImageConverter();
+        signsJSON.file = applicationMy.image;
+        signsJSON.description = "";
         signsJSON.latitude = applicationMy.latitude;
         signsJSON.longtitude = applicationMy.longitude;
     }
