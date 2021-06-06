@@ -57,11 +57,6 @@ function Roads(props) {
         getSigns();
     }, []);
 
-    function formatDate (date) {
-        date = new Date(date);
-        var ret = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear() + " " + date.getHours() + ":" + (date.getMinutes() >= 10 ? date.getMinutes() : "0" + date.getMinutes());
-        return ret;
-    }
     const greenOptions = { color: '#00ff66' }
     const yellowOptions = { color: '#fffb00' }
     const redOptions = { color: '#ff0004' }

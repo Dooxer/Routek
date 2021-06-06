@@ -1,6 +1,5 @@
 import './App.css';
-import Map from './components/Map';
-import {BrowserRouter, Link, Route} from 'react-router-dom';
+import {BrowserRouter, Route} from 'react-router-dom';
 import Scraper from './components/Scraper';
 import Header from './components/Header';
 import Signs from './components/Signs';

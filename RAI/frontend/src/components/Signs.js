@@ -38,7 +38,7 @@ function Signs() {
                             <Popup>
                                 <h5>{sign.description}</h5>
                                 Created: {formatDate(sign.date)} <br/>
-                                <img style={{height: "200px", width: "auto"}} src={"http://localhost:3001/" + sign.picture} />
+                                <img style={{height: "200px", width: "auto"}} alt="" src={"http://localhost:3001/" + sign.picture} />
                             </Popup>
                         </Marker>)
                 })}
