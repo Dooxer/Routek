@@ -2,6 +2,7 @@ version: "3"
 services: 
     api-server:
         image: api-server
+        restart: unless-stopped
         build: ./backend/
         environment:
             CHOKIDAR_USEPOLLING: "true"
@@ -14,12 +15,13 @@ services:
             - /usr/src/app/node_modules
     react-app:
         image: react-app
+        restart: unless-stopped
         build: ./frontend/
         environment:
             CHOKIDAR_USEPOLLING: "true"
         ports: 
             - "3000:3000"
-        networks: 
+        networks:
             - routek
         volumes: 
             - ./frontend:/usr/src/app
