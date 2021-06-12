@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 services: 
     api-server:
         image: api-server
@@ -8,8 +8,6 @@ services:
             CHOKIDAR_USEPOLLING: "true"
         ports: 
             - "3001:3001"
-        networks: 
-            - routek
         volumes: 
             - ./backend:/usr/src/app
             - /usr/src/app/node_modules
@@ -21,11 +19,12 @@ services:
             CHOKIDAR_USEPOLLING: "true"
         ports: 
             - "3000:3000"
-        networks:
-            - routek
         volumes: 
             - ./frontend:/usr/src/app
             - /usr/src/app/node_modules
-networks: 
-    routek:
-        driver: bridge
+    python-api:
+        image: python-api
+        restart: unless-stopped
+        build: ./python/
+        ports: 
+            - "5000:5000"

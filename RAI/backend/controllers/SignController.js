@@ -1,3 +1,8 @@
+const { 
+    v4: uuidv4,
+  } = require('uuid');
+const fetch = require("node-fetch");
+var replaceAll = require("replaceall");
 var SignModel = require('../models/SignModel.js');
 var fs = require("fs")
 /**
@@ -52,31 +57,40 @@ module.exports = {
      * SignController.create()
      */
     create: function (req, res) {
-        var date = new Date();
-        var fileName = "images/" + (date.toJSON().slice(0,10) + "_" + date.getHours() + "-" + date.getMinutes() + "-" + date.getMilliseconds()) + ".png";
-        console.log(fileName)
-        fs.writeFile("public/" + fileName, req.body.file, 'base64', function(err) {
+        var name = replaceAll("-","",uuidv4())
+        var filePath = "images/" + name + ".png";
+
+        fs.writeFile("public/" + filePath, req.body.file, 'base64', function(err) {
             console.log(err);
         });
-        
-        var Sign = new SignModel({
-			picture : fileName,
-			description : req.body.description,
-            longtitude : req.body.longtitude,
-            latitude : req.body.latitude,
-			date : Date()
-        });
 
-        Sign.save(function (err, Sign) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating Sign',
-                    error: err
+        async function recogniseSign(){
+            const result = await fetch('http://python-api:5000/recognise?image=' + name + ".png");
+            var data = await result.json()
+
+            if(data.success === "true"){
+                var Sign = new SignModel({
+                    picture : filePath,
+                    description : data.sign,
+                    longtitude : req.body.longtitude,
+                    latitude : req.body.latitude,
+                    date : Date()
                 });
-            }
+    
+                Sign.save(function (err, Sign) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when creating Sign',
+                            error: err
+                        });
+                    }
+    
+                    return res.status(201).json(Sign);
+                });
 
-            return res.status(201).json(Sign);
-        });
+            }
+        }
+        recogniseSign()
     },
 
     /**
@@ -128,6 +142,8 @@ module.exports = {
                     error: err
                 });
             }
+
+            fs.unlinkSync("public/" + Sign.picture)
 
             return res.status(204).json();
         });
