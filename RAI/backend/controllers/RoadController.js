@@ -72,32 +72,6 @@ module.exports = {
     },
 
     /**
-     * RoadController.createList()
-     */
-    createList: function (req, res) {
-        console.log(req.body);
-
-        // var Road = new RoadModel({
-        //     pathID: req.body.pathID,
-		// 	latitude : req.body.latitude,
-		// 	longtitude : req.body.longtitude,
-		// 	quality : req.body.quality,
-        //     date : Date()
-        // });
-
-        // Road.save(function (err, Road) {
-        //     if (err) {
-        //         return res.status(500).json({
-        //             message: 'Error when creating Road',
-        //             error: err
-        //         });
-        //     }
-
-        //     return res.status(201).json(Road);
-        // });
-    },
-
-    /**
      * RoadController.update()
      */
     update: function (req, res) {
