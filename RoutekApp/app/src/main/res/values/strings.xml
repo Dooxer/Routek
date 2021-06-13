@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Routek</string>
+    <string name="routek">Routek</string>
+    <string name="sign_capture">Sign capture</string>
+    <string name="road_quality_detection">Road quality detection</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="go_to_main_menu">Main Menu</string>
+</resources>

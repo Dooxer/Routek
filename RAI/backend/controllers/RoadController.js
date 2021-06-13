@@ -11,7 +11,7 @@ module.exports = {
      * RoadController.list()
      */
     list: function (req, res) {
-        RoadModel.find(function (err, Roads) {
+        RoadModel.find().sort("-date").exec(function (err, Roads) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting Road.',
@@ -69,6 +69,30 @@ module.exports = {
 
             return res.status(201).json(Road);
         });
+    },
+
+    /**
+     * RoadController.createList()
+     */
+     createList: function (req, res) {
+         console.log(req.body.roads);
+         req.body.roads.forEach(road => {
+            var Road = new RoadModel({
+                pathID: road.pathID,
+                latitude : road.latitude,
+                longtitude : road.longtitude,
+                quality : road.quality,
+                date : road.date
+            });
+    
+            Road.save(function (err, Road) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+         });
+
+         return res.status(201);
     },
 
     /**

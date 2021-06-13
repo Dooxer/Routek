@@ -18,6 +18,11 @@ router.get('/:id', RoadController.show);
 router.post('/', RoadController.create);
 
 /*
+ * POST
+ */
+router.post('/list', RoadController.createList);
+
+/*
  * PUT
  */
 router.put('/:id', RoadController.update);
