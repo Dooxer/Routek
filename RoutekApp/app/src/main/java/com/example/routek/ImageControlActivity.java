@@ -27,7 +27,8 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.ParseException;
+
+import java.text.ParseException;
 
 public class ImageControlActivity extends AppCompatActivity {
     private static final String TAG = ImageControlActivity.class.getSimpleName();
@@ -38,7 +39,7 @@ public class ImageControlActivity extends AppCompatActivity {
     boolean trackingLocation = false;
     ImageView imageView;
     RequestQueue requestQueue;
-    String signsURL = "http://192.168.1.7:3001/signs";
+    String signsURL = "http://192.168.137.119:3001/signs";
     JsonObjectRequest objectRequest;
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     Sign signsJSON = new Sign();
@@ -116,8 +117,8 @@ public class ImageControlActivity extends AppCompatActivity {
 
     private LocationRequest getLocationRequest() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(500);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
     }

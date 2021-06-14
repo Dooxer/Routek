@@ -34,8 +34,8 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.ParseException;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +70,7 @@ public class RoadQualityRecognitionActivity extends AppCompatActivity {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     RequestQueue requestQueue;
-    String signsURL = "http://192.168.1.7:3001/roads/list";
+    String signsURL = "http://192.168.137.119:3001/roads/list";
     JsonObjectRequest objectRequest;
 
     @Override

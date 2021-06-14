@@ -90,7 +90,7 @@ def signRecognition():
         }
         return json.dumps(x)
 
-    image = url_to_image("http://api-server:3001/images/" + image)
+    image = url_to_image("http://localhost:3001/images/" + image)
     img = np.asarray(image)
     img = cv2.resize(img, (32, 32))
     img = preprocessing(img)
