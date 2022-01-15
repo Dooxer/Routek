@@ -66,10 +66,10 @@ module.exports = {
         });
 
         async function recogniseSign(){
-            const result = await fetch('http://python-api:5000/recognise?image=' + name + ".png");
+            const result = await fetch('http://localhost:5000/recognise?image=' + name + ".png");
             var data = await result.json()
 
-            if(data.success === "true"){
+            if(data != null && await data.success === "true"){
                 var Sign = new SignModel({
                     picture : filePath,
                     description : data.sign,
@@ -88,7 +88,9 @@ module.exports = {
     
                     return res.status(201).json(Sign);
                 });
-
+            }
+            else{
+                fs.unlinkSync("public/" + filePath);
             }
         }
         recogniseSign()
