@@ -70,7 +70,7 @@ public class RoadQualityRecognitionActivity extends AppCompatActivity {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     RequestQueue requestQueue;
-    String signsURL = "http://192.168.137.78:3001/roads/list";
+    String signsURL = "http://192.168.137.119:3001/roads/list";
     JsonObjectRequest objectRequest;
 
     @Override

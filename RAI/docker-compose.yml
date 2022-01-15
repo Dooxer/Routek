@@ -4,16 +4,17 @@ services:
         image: api-server
         restart: unless-stopped
         build: ./backend/
-        networks: 
-            - routek
+        environment:
+            CHOKIDAR_USEPOLLING: "true"
         ports: 
             - "3001:3001"
+        volumes: 
+            - ./backend:/usr/src/app
+            - /usr/src/app/node_modules
     react-app:
         image: react-app
         restart: unless-stopped
         build: ./frontend/
-        networks: 
-            - routek
         environment:
             CHOKIDAR_USEPOLLING: "true"
         ports: 
@@ -25,11 +26,5 @@ services:
         image: python-api
         restart: unless-stopped
         build: ./python/
-        networks: 
-            - routek
         ports: 
             - "5000:5000"
-
-networks:
-    routek:
-        driver: bridge

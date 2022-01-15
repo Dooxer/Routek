@@ -30,6 +30,7 @@ public class ApplicationMy extends Application {
     public void onCreate() {
         super.onCreate();
         roadsJSON = new RoadsJSON();
+        clearFile();
         readFromFile();
     }
 
