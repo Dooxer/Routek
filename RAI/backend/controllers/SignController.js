@@ -57,6 +57,7 @@ module.exports = {
      * SignController.create()
      */
     create: function (req, res) {
+        console.log(req.body)
         var name = replaceAll("-","",uuidv4())
         var filePath = "images/" + name + ".png";
 

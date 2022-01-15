@@ -38,7 +38,7 @@ public class ImageControlActivity extends AppCompatActivity {
     boolean trackingLocation = false;
     ImageView imageView;
     RequestQueue requestQueue;
-    String signsURL = "http://192.168.1.7:3001/signs";
+    String signsURL = "http://192.168.137.78:3001/signs";
     JsonObjectRequest objectRequest;
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     Sign signsJSON = new Sign();
@@ -150,12 +150,12 @@ public class ImageControlActivity extends AppCompatActivity {
 
     public JSONObject getJSON() throws ParseException, JSONException {
         String jsonString = gson.toJson(signsJSON);
+        Log.d(TAG, jsonString);
         return new JSONObject(jsonString);
     }
 
     private void setJSONobject(){
         signsJSON.file = applicationMy.image;
-        signsJSON.description = "";
         signsJSON.latitude = applicationMy.latitude;
         signsJSON.longtitude = applicationMy.longitude;
     }
