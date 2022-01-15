@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"start": "node ./bin/index.js",
+		"start": "pwd && node ./bin/index.js",
 		"heroku-prebuild": "cd ./RAI/backend && npm install && npm run build"
 	},
 	"dependencies": {
