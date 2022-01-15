@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"start": "node ./bin/index.js",
-		"heroku-prebuild": "cd ./RAI/backend && npm install && npm run build"
+		"heroku-prebuild": "cd ./RAI/backend && npm install && npm run build && cd .."
 	},
 	"dependencies": {
 		"connect-mongo": "^4.4.1",
