@@ -4,6 +4,258 @@ import Button from 'react-bootstrap/Button';
 const rp = require('request-promise');
 var convert = require('xml-js');
 
+let differences = [];
+let binData = "";
+
+function deAbs(){
+    var tempSign = "";
+    var tempValue = "";
+
+    tempSign = binData.substring(0,1);
+    binData = binData.substring(1);
+
+    tempValue =  binData.substring(0,8);
+    binData = binData.substring(8);
+
+    if(tempSign == "1"){
+        differences.push(-bin2dec(tempValue));
+    }
+    else{
+        differences.push(bin2dec(tempValue));
+    }
+}
+
+function deDifference00(){
+    var temp = "";
+    var numberOfBits = 0;
+
+    temp = binData.substring(0,2);
+    binData = binData.substring(2);
+
+    numberOfBits = bin2dec(temp) + 2;
+    
+    if(numberOfBits == 2){
+        let lowArr = [-2, -1];
+        let highArr = [1, 2];
+        differences.push(getValFromBits(lowArr, highArr, binData.substring(0,2)));
+        binData = binData.substring(2);
+    }
+    else if(numberOfBits == 3){
+        let lowArr = [-6, -3];
+        let highArr = [3, 6];
+        differences.push(getValFromBits(lowArr, highArr, binData.substring(0,3)));
+        binData = binData.substring(3);
+    }
+    else if(numberOfBits == 4){
+        let lowArr = [-14, -7];
+        let highArr = [7, 14];
+        differences.push(getValFromBits(lowArr, highArr, binData.substring(0,4)));
+        binData = binData.substring(4);
+    }
+    else{
+        let lowArr = [-30, -15];
+        let highArr = [15, 30];
+        differences.push(getValFromBits(lowArr, highArr, binData.substring(0,5)));
+        binData = binData.substring(5);
+    }
+
+}
+
+function deRepetitions01(){
+    var temp = binData.substring(0,3);
+    binData = binData.substring(3);
+
+    var reps = bin2dec(temp)  + 1;
+
+    for (let i = 0; i < reps; i++) {
+        differences.push(0);
+    }
+}
+
+function getValFromBits(lowArr, highArr, input){
+    let temp = bin2dec(input);
+    let value = lowArr[0];
+
+    for (let i = 0; i < temp; i++) {
+        if(value == lowArr[1]) value = highArr[0];
+        else{
+            value++;
+        }
+    } 
+
+    return value;
+}
+
+function getBits(lowArr, highArr, input, numOfBits){
+    let temp = lowArr[0];
+    let value = 0;
+    let result = "0".repeat(numOfBits+1);
+
+    for (let i = 0; temp != input; i++) {
+        if(temp == lowArr[1]){
+            temp = highArr[0];
+            value++;
+        } 
+        else{
+            temp++;
+            value++;
+        }  
+    } 
+
+    return (result + value.toString(2)).substr(-numOfBits)
+}
+
+function difference00(input){
+    var output = "";
+
+    if(Math.abs(input) == 1 || Math.abs(input) == 2){
+        let lowArr = [-2, -1];
+        let highArr = [1, 2];
+       
+        output += "00" + getBits(lowArr, highArr, input, 2);
+    }
+    else if(Math.abs(input) >= 3 && Math.abs(input) <= 6){
+        let lowArr = [-6, -3];
+        let highArr = [3, 6];
+       
+        output += "01" +getBits(lowArr, highArr, input, 3);
+    }
+    else if(Math.abs(input) >= 7 && Math.abs(input) <= 14){
+        let lowArr = [-14, -7];
+        let highArr = [7, 14];
+       
+        output += "10" +getBits(lowArr, highArr, input, 4);
+    }
+    else if(Math.abs(input) >= 15 && Math.abs(input) <= 30){
+        let lowArr = [-30, -15];
+        let highArr = [15, 30];
+       
+        output += "11" + getBits(lowArr, highArr, input, 5);
+    }
+
+    return output;
+}
+
+function repetitions01(reps){
+    return ("0000" + reps.toString(2)).substr(-3); 
+}
+
+function abs10(input){
+    if(input > 0){
+        return "0" + dec2bin(input);
+    }
+    else{
+        return "1" + dec2bin(Math.abs(input));
+    }
+}
+
+function dec2bin(n) {
+    return ("000000000" + n.toString(2)).substr(-8);
+}
+
+function bin2dec(n){
+    return (parseInt(n, 2));
+}
+
+function compress(text){
+    let output = "";
+
+    let numArr = [];
+    let diffArr = [];
+
+    let reps = 0;
+
+    // escape
+    text = encodeURI(text);
+
+    //Input -> ASCII
+    for (let i = 0; i < text.length; i++) {
+      numArr.push(text[i].charCodeAt());
+    }
+    
+    //Zapis prve vrednosti z 8 biti
+    output += dec2bin(numArr[0]);
+
+    for (let i = 0; i < numArr.length-1; i++) {
+        diffArr[i] = numArr[i+1] - numArr[i];
+    }
+
+    for (let i = 0; i < diffArr.length; i++) {
+        if(Math.abs(diffArr[i]) >= 1 && Math.abs(diffArr[i]) <= 30){
+            output += "00" + difference00(diffArr[i]);
+        }
+        else if(diffArr[i] == 0){
+            reps++;
+
+            if(diffArr.length-1 == i || diffArr[i+1] != 0 || reps == 8){
+                output += "01" + repetitions01(reps-1);
+
+                reps = 0;
+            }         
+        }
+        else{
+            output += "10" + abs10(diffArr[i]);
+        }
+    }
+
+    output += "11";
+
+    while(output.length % 8 != 0){
+        output += "0";
+    }
+
+    var buffer = "";
+    
+    for (let i = 0; output.length > 0; i++) {
+        buffer += (String.fromCharCode(parseInt(output.substring(0, 8), 2)));
+        output = output.substring(8);       
+    }
+    
+    return buffer;
+}
+
+function decompress(data){
+    console.log(data.length);
+    differences.push(data[0].charCodeAt()); 
+
+    for (let i = 1; i < data.length; i++) {
+        binData += dec2bin(data[i].charCodeAt())
+    }
+
+    while(binData.length != 0){
+        let temp = binData.substring(0,2);
+        binData = binData.substring(2);
+
+        switch (temp) {
+            case "00":
+                deDifference00(); 
+                break;
+            case "01":
+                deRepetitions01();
+                break;            
+            case "10":
+                deAbs();
+                break;
+            case "11":
+                binData = "";
+                break;
+        }
+    }
+
+    var output = "" + String.fromCharCode(differences[0]);
+
+    for (let i = 1; i < differences.length; i++) {
+        differences[i] = differences[i-1] + differences[i];
+        output += String.fromCharCode(differences[i]);
+    }
+
+    output = decodeURI(output);
+    binData = "";
+    differences = [];
+    
+    return output;
+}
+
 function Scraper() {
     const [trafficEvents, setTrafficEvents] = useState([]);
     const [trafficEventsHead, setTrafficEventsHead] = useState([]);
@@ -80,7 +332,7 @@ function Scraper() {
                             var trafficEvents = await res.json();
 
                             json.entry.forEach(async element => {
-                                var trafficEvent = {id: element.id._text, title: element.title._text, updated: element.updated._text, summary: element.summary._text, trafficEventsHead: result._id, category: element.category._attributes.term};
+                                var trafficEvent = {id: element.id._text, title: element.title._text, updated: element.updated._text, summaryData: compress(element.summary._text), trafficEventsHead: result._id, category: element.category._attributes.term};
                                                             
                                 // preverimo, če dogodek že obstaja
                                 var addEvent = true;
@@ -149,11 +401,12 @@ function Scraper() {
                 </thead>
                 <tbody>
                     {trafficEvents.map((element) => {
+                        console.log(element.id);
                         return (
                         <tr key={element.id}>
                             <td>{element.id}</td>
                             <td>{element.title}</td>
-                            <td>{element.summary}</td>
+                            <td>{decompress(element.summaryData)}</td>
                             <td>{formatDate(element.updated)}</td>
                             <td>{element.category}</td>
                         </tr>) 

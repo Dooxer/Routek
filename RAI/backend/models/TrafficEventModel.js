@@ -5,7 +5,7 @@ var TrafficEventSchema = new Schema({
 	'id' : Number,
 	'title' : String,
 	'updated' : Date,
-	'summary' : String,
+	'summaryData' : String,
 	'category' : String,
 	'trafficEventsHead' : {
 	 	type: Schema.Types.ObjectId,
