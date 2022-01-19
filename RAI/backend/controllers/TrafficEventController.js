@@ -55,7 +55,7 @@ module.exports = {
 			id : req.body.id,
 			title : req.body.title,
 			updated : req.body.updated,
-			summary : req.body.summary,
+			summaryData : req.body.summaryData,
 			category : req.body.category,
 			trafficEventsHead : req.body.trafficEventsHead
         });
@@ -95,7 +95,7 @@ module.exports = {
             TrafficEvent.id = req.body.id ? req.body.id : TrafficEvent.id;
 			TrafficEvent.title = req.body.title ? req.body.title : TrafficEvent.title;
 			TrafficEvent.updated = req.body.updated ? req.body.updated : TrafficEvent.updated;
-			TrafficEvent.summary = req.body.summary ? req.body.summary : TrafficEvent.summary;
+			TrafficEvent.summaryData = req.body.summaryData ? req.body.summaryData : TrafficEvent.summaryData;
 			TrafficEvent.category = req.body.category ? req.body.category : TrafficEvent.category;
 			TrafficEvent.trafficEventsHead = req.body.trafficEventsHead ? req.body.trafficEventsHead : TrafficEvent.trafficEventsHead;
 			
