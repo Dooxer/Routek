@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HowIsRoad : MonoBehaviour
 {
     UpdateGPSLocation currentLocation;
-    public Text text;
+
     // Start is called before the first frame update
     void Start()
     {

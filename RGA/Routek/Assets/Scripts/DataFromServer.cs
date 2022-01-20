@@ -33,10 +33,10 @@ public class RoadDataURL
 }
 public class DataFromServer : MonoBehaviour
 {
-
     public static DataFromServer Instance { set; get; }
     public static RoadDataURL roadData { set; get; }
- 
+    public static RoadSignsURL mysigns { set; get; }
+
     // Start is called before the first frame update
     protected string roadSignDataURL = "https://projektna.herokuapp.com/signs";
     protected string roadDataURL = "https://projektna.herokuapp.com/roads";
@@ -45,6 +45,7 @@ public class DataFromServer : MonoBehaviour
     {
         Instance = this;
         GetRoadDataFromServer();
+        // GetSignDataFromServer();
         //DataFromServer.Instance.GetRoadDataFromServer();
         //DontDestroyOnLoad(gameObject);
         //StartCoroutine(StartLocationService());
@@ -52,7 +53,7 @@ public class DataFromServer : MonoBehaviour
 
     public void GetSignDataFromServer()
     {
-        _ = StartCoroutine(GetSignData());
+        StartCoroutine(GetSignData());
     }
     
     IEnumerator GetSignData()
@@ -74,21 +75,14 @@ public class DataFromServer : MonoBehaviour
     private void ProcessJSON_Signs(string data)
     {
         data = "{\"roadSigns\":" + data + "}";
-        RoadSignsURL mysigns = JsonUtility.FromJson<RoadSignsURL>(data);
-
-        foreach (RoadSignDataServ rD in mysigns.roadSigns)
-        {
-            string d = rD.signType + " " + rD.latitude.ToString() + " " + rD.longitude.ToString();
-            Debug.Log(d);
-        }
-
+        mysigns = JsonUtility.FromJson<RoadSignsURL>(data);
+        Debug.Log($"{mysigns}");
     }
 
     public void GetRoadDataFromServer()
     {
         _ = StartCoroutine(GetRoadData());
     }
-
 
     IEnumerator GetRoadData()
     {
@@ -105,17 +99,10 @@ public class DataFromServer : MonoBehaviour
         }
     }
 
-
     private void ProcessJSON_Road(string data)
     {
         data = "{\"roadData\":" + data + "}";
-        roadData = JsonUtility.FromJson<RoadDataURL>(data);
-        Debug.Log("Road data");
-        //foreach (RoadDataServ rD in roadData.roadData)
-        //{
-        //    string d = rD.quality.ToString() + "      " + rD.latitude.ToString() + " " + rD.longtitude.ToString();
-        //    Debug.Log(d);
-        //}
-
+        roadData = JsonUtility.FromJson<RoadDataURL>(data); 
+        Debug.Log($"{roadData}");
     }
 }

@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PrepareData : MonoBehaviour
 {
-
     private DataFromServer dataLoader = new DataFromServer();
-    List<RoadDataServ> road;
-    private int idx;
-
+    
     void Start()
     {
-        dataLoader.GetRoadDataFromServer();
+        //dataLoader.GetRoadDataFromServer();
         //dataLoader.generateTestRoadData();
         //dataLoader.pathToRoadSignData = Application.dataPath + "/trafficSigns.json";
         //dataLoader.LoadRoadSignData();
@@ -20,23 +16,27 @@ public class PrepareData : MonoBehaviour
         //dataLoader.pathToRoadData = Application.dataPath + "/roadCondition.json";
         //dataLoader.LoadRoadData();
         //road = dataLoader.myLittleRoad;
-        idx = 1;
     }
-
 
     void Update()
     {
+        if (DataFromServer.roadData == null || DataFromServer.roadData.roadData == null || DataFromServer.roadData.roadData.Count == 0) return;
 
-        if (idx < road.Count)
+        List<RoadDataServ> roads = DataFromServer.roadData.roadData;
+
+        float minDist = float.MaxValue;
+        RoadDataServ closestRoadPoint = null;
+
+        double latitude = GPS.Instance.latitude;
+        double longitude = GPS.Instance.longitude;
+        foreach (RoadDataServ road in roads)
         {
-            float distance = DistanceBetweenPointsInMetres(road[idx - 1].latitude, road[idx - 1].longtitude,
-                                                            road[idx].latitude, road[idx].longtitude);
-
-            string msg = idx.ToString() + ":      " + "(" + road[idx - 1].latitude.ToString() + ", " + road[idx - 1].longtitude.ToString() + ") \t" +
-                                                      "(" + road[idx].latitude.ToString() + ", " + road[idx].longtitude.ToString() + ") \n" +
-                                                      "distance:" + distance.ToString();
-            Debug.Log(msg);
-            idx++;
+            float dist = DistanceBetweenPointsInMetres(latitude, longitude, road.latitude, road.longtitude);
+            if(minDist > dist)
+            {
+                minDist = dist;
+                closestRoadPoint = road;
+            }
         }
     }
 

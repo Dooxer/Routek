@@ -1,39 +1,31 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GPS : MonoBehaviour
 {
+    public TextMeshProUGUI text;
     public static GPS Instance{set; get;}
 
     public double latitude;
     public double longitude;
 
-    IEnumerator coroutine;
     void Start()
     {
         Instance = this;
-        coroutine = UpdateGPS();
-        //DataFromServer.Instance.GetRoadDataFromServer();
         DontDestroyOnLoad(gameObject);
         StartCoroutine(StartLocationService());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private IEnumerator StartLocationService()
     {
         if (!Input.location.isEnabledByUser)
         {
-            Debug.Log("GPS not enabled");
+            text.text = "GPS not enabled!";
             yield break;
         }
 
-        Input.location.Start();
+        Input.location.Start(0.1f, 0.1f);
         int maxWait = 20;
         while(Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
         {
@@ -43,23 +35,23 @@ public class GPS : MonoBehaviour
 
         if(maxWait <= 0)
         {
-            Debug.Log("Timed out!");
+            text.text = "GPS Timeout!";
             yield break;
         }
 
         if(Input.location.status == LocationServiceStatus.Failed)
         {
-            Debug.Log("Location initialization failed");
+            text.text = "Location initialization failed";
             yield break;
         }
         latitude = Input.location.lastData.latitude;
         longitude = Input.location.lastData.longitude;
-        StartCoroutine(coroutine);
+        StartCoroutine(UpdateGPS());
     }
 
     IEnumerator UpdateGPS()
     {
-        float UPDATE_TIME = 3f; //Every  3 seconds
+        float UPDATE_TIME = 1f; //Every  3 seconds
         WaitForSeconds updateTime = new WaitForSeconds(UPDATE_TIME);
 
         while (true)
@@ -69,5 +61,4 @@ public class GPS : MonoBehaviour
             yield return updateTime;
         }
     }
-
 }
