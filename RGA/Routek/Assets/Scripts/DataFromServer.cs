@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 [System.Serializable]
 public class RoadSignDataServ
 {
-    public string signType;
+    public string _id;
+    public string description;
     public double longitude;
     public double latitude;
 }
@@ -17,10 +18,10 @@ public class RoadSignsURL
     public List<RoadSignDataServ> roadSigns = new List<RoadSignDataServ>();
 }
 
-
 [System.Serializable]
 public class RoadDataServ
 {
+    public string _id;
     public int quality;
     public double longtitude;
     public double latitude;
@@ -31,6 +32,7 @@ public class RoadDataURL
 {
     public List<RoadDataServ> roadData = new List<RoadDataServ>();
 }
+
 public class DataFromServer : MonoBehaviour
 {
     public static DataFromServer Instance { set; get; }
@@ -45,10 +47,7 @@ public class DataFromServer : MonoBehaviour
     {
         Instance = this;
         GetRoadDataFromServer();
-        // GetSignDataFromServer();
-        //DataFromServer.Instance.GetRoadDataFromServer();
-        //DontDestroyOnLoad(gameObject);
-        //StartCoroutine(StartLocationService());
+        GetSignDataFromServer();
     }
 
     public void GetSignDataFromServer()
@@ -71,12 +70,10 @@ public class DataFromServer : MonoBehaviour
         }
     }
 
-
     private void ProcessJSON_Signs(string data)
     {
         data = "{\"roadSigns\":" + data + "}";
         mysigns = JsonUtility.FromJson<RoadSignsURL>(data);
-        Debug.Log($"{mysigns}");
     }
 
     public void GetRoadDataFromServer()
@@ -102,7 +99,6 @@ public class DataFromServer : MonoBehaviour
     private void ProcessJSON_Road(string data)
     {
         data = "{\"roadData\":" + data + "}";
-        roadData = JsonUtility.FromJson<RoadDataURL>(data); 
-        Debug.Log($"{roadData}");
+        roadData = JsonUtility.FromJson<RoadDataURL>(data);
     }
 }

@@ -1,20 +1,35 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class GPS : MonoBehaviour
 {
     public TextMeshProUGUI text;
-    public static GPS Instance{set; get;}
 
-    public double latitude;
-    public double longitude;
+    public static double latitude;
+    public static double longitude;
+
+    private bool enableLocation = false;
 
     void Start()
     {
-        Instance = this;
         DontDestroyOnLoad(gameObject);
         StartCoroutine(StartLocationService());
+    }
+
+    private void Update()
+    {
+        if (!Input.location.isEnabledByUser)
+        {
+            Permission.RequestUserPermission(Permission.FineLocation);
+            text.text = "GPS not enabled!";
+        }
+        else if(!enableLocation)
+        {
+            enableLocation = true;
+            StartCoroutine(StartLocationService());
+        }
     }
 
     private IEnumerator StartLocationService()
@@ -25,7 +40,7 @@ public class GPS : MonoBehaviour
             yield break;
         }
 
-        Input.location.Start(0.1f, 0.1f);
+        Input.location.Start(1f, 1f);
         int maxWait = 20;
         while(Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
         {
