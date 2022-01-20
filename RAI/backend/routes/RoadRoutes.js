@@ -6,6 +6,7 @@ var RoadController = require('../controllers/RoadController.js');
  * GET
  */
 router.get('/', RoadController.list);
+router.get("/analyze", RoadController.analyze)
 
 /*
  * GET

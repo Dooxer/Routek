@@ -1,4 +1,6 @@
 var RoadModel = require('../models/RoadModel.js');
+const { spawn } = require('child_process');
+const { exec } = require('child_process');
 
 /**
  * RoadController.js
@@ -23,13 +25,26 @@ module.exports = {
         });
     },
 
+    analyze: function (req, res) {
+
+        exec('mpiexec -n 4 python ./programs/analyze.py', (err, stdout, stderr) => {
+            if (err) {
+                console.error(`exec error: ${err}`);
+                return;
+            }
+
+            console.log(`Quality ${stdout}`);
+            return res.json({ quality: stdout.trimRight() });
+
+        });
+    },
     /**
      * RoadController.show()
      */
     show: function (req, res) {
         var id = req.params.id;
 
-        RoadModel.findOne({_id: id}, function (err, Road) {
+        RoadModel.findOne({ _id: id }, function (err, Road) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting Road.',
@@ -53,10 +68,10 @@ module.exports = {
     create: function (req, res) {
         var Road = new RoadModel({
             pathID: req.body.pathID,
-			latitude : req.body.latitude,
-			longtitude : req.body.longtitude,
-			quality : req.body.quality,
-            date : Date()
+            latitude: req.body.latitude,
+            longtitude: req.body.longtitude,
+            quality: req.body.quality,
+            date: Date()
         });
 
         Road.save(function (err, Road) {
@@ -74,25 +89,25 @@ module.exports = {
     /**
      * RoadController.createList()
      */
-     createList: function (req, res) {
-         console.log(req.body.roads);
-         req.body.roads.forEach(road => {
+    createList: function (req, res) {
+        console.log(req.body.roads);
+        req.body.roads.forEach(road => {
             var Road = new RoadModel({
                 pathID: road.pathID,
-                latitude : road.latitude,
-                longtitude : road.longtitude,
-                quality : road.quality,
-                date : road.date
+                latitude: road.latitude,
+                longtitude: road.longtitude,
+                quality: road.quality,
+                date: road.date
             });
-    
+
             Road.save(function (err, Road) {
                 if (err) {
                     console.log(err);
                 }
             });
-         });
+        });
 
-         return res.status(201);
+        return res.status(201);
     },
 
     /**
@@ -101,7 +116,7 @@ module.exports = {
     update: function (req, res) {
         var id = req.params.id;
 
-        RoadModel.findOne({_id: id}, function (err, Road) {
+        RoadModel.findOne({ _id: id }, function (err, Road) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting Road',
@@ -116,8 +131,8 @@ module.exports = {
             }
 
             Road.latitude = req.body.startLatitude ? req.body.startLatitude : Road.startLatitude;
-			Road.longtitude = req.body.startLongtitude ? req.body.startLongtitude : Road.startLongtitude;
-			Road.quality = req.body.quality ? req.body.quality : Road.quality;
+            Road.longtitude = req.body.startLongtitude ? req.body.startLongtitude : Road.startLongtitude;
+            Road.quality = req.body.quality ? req.body.quality : Road.quality;
 
             Road.save(function (err, Road) {
                 if (err) {
